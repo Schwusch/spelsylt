@@ -1,48 +1,69 @@
+lovebird = require "lovebird"
 local imageFile
 local frames = {}
 
 local activeFrame
 local currentFrame = 1
 function love.load()
-    imageFile = love.graphics.newImage("assets/idle.png")
-    frames[1] = love.graphics.newQuad(0,0,100,100,imageFile:getDimensions())
-    frames[2] = love.graphics.newQuad(100,0,100,100,imageFile:getDimensions())
-    frames[3] = love.graphics.newQuad(200,0,100,100,imageFile:getDimensions())
-    frames[4] = love.graphics.newQuad(300,0,100,100,imageFile:getDimensions())
-    activeFrame = frames[currentFrame]
-    print(select(4,activeFrame:getViewport())/2)
+    world = love.physics.newWorld( 0, 10, true )
+    
+    animations = {
+        newAnimation(love.graphics.newImage("assets/idle.png"), 100, 100, 1), 
+        newAnimation(love.graphics.newImage("assets/enemy-walking.png"), 100, 100, 1)
+    }
+    bodies = {
+        love.physics.newBody(world, 50, 50, 'dynamic'), 
+        love.physics.newBody(world, love.graphics.getWidth() - 150, love.graphics.getHeight() - 150, 'dynamic')
+    }
+    love.graphics.setBackgroundColor(1,1,1,1)
 end
 
 function love.draw()
-    --love.graphics.draw(imageFile,activeFrame)
---[[    love.graphics.draw(imageFile,activeFrame,
-        love.graphics.getWidth()/2 - (select(3,activeFrame:getViewport())/2) * 2,
-        love.graphics.getHeight()/2 - (select(4,activeFrame:getViewport())/2) * 2,
+    for k, v in pairs(animations) do
+        drawAnimation(v, bodies[k])
+    end
+end
 
-            0,
-            2,
-            2)
-]]--
-    -- draw image 4x size centered
-    love.graphics.draw(imageFile,activeFrame,
-        love.graphics.getWidth()/2 - ({activeFrame:getViewport()})[3]/2,
-        love.graphics.getHeight()/2 - ({activeFrame:getViewport()})[4]/2,
+local elapsedTime = 0
+function love.update(dt)
+    lovebird.update()
+    world:update(dt)
+    for k, v in pairs(animations) do
+        updateAnimation(v, dt)
+    end
+end
+
+function drawAnimation(animation, body)
+    x, y = body:getPosition()
+    local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads) + 1
+    love.graphics.draw(animation.spriteSheet, animation.quads[spriteNum], 
+        x,
+        y,
         0,
         1,
         1)
 end
 
-local elapsedTime = 0
-function love.update(dt)
-    elapsedTime = elapsedTime + dt
+function updateAnimation(animation, dt)
+    animation.currentTime = animation.currentTime + dt
+    if animation.currentTime >= animation.duration then
+        animation.currentTime = animation.currentTime - animation.duration
+    end
+end
 
-    if(elapsedTime > 1/10) then
-        if(currentFrame < 4) then
-            currentFrame = currentFrame + 1
-        else
-        currentFrame = 1
+function newAnimation(image, width, height, duration)
+    local animation = {}
+    animation.spriteSheet = image;
+    animation.quads = {};
+ 
+    for y = 0, image:getHeight() - height, height do
+        for x = 0, image:getWidth() - width, width do
+            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
         end
-        activeFrame = frames[currentFrame]
-        elapsedTime = 0
-        end
+    end
+ 
+    animation.duration = duration or 1
+    animation.currentTime = 0
+ 
+    return animation
 end
