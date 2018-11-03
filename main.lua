@@ -48,10 +48,16 @@ function love.update(dt)
     lurker.update()
     world:update(dt)
     if love.keyboard.isDown( "left" ) then 
+        if not player.animation.flippedH then
+            player.animation:flipH()
+        end
         local vx, vy = player.body:getLinearVelocity()
         player.body:setLinearVelocity(-100, vy) 
     end
     if love.keyboard.isDown( "right" ) then 
+        if player.animation.flippedH then
+            player.animation:flipH()
+        end
         local vx, vy = player.body:getLinearVelocity()
         player.body:setLinearVelocity(100, vy) 
     end
