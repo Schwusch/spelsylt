@@ -1,6 +1,6 @@
-lovebird = require "lovebird"
-lurker = require("lurker")
-anim8 = require 'anim8'
+lovebird = require "libs/lovebird"
+lurker = require("libs/lurker")
+anim8 = require 'libs/anim8'
 frames = {}
 player = {}
 enemy = {}
