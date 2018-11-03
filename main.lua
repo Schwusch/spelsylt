@@ -18,6 +18,7 @@ function love.load()
 
     player = {}
     player.allowedJump = false
+    player.isAlive = true
     player.shape = love.physics.newRectangleShape(100, 100)
     player.body = love.physics.newBody(world, 50, 50, 'dynamic')
     player.fixture = love.physics.newFixture(player.body, player.shape, 1)
@@ -29,6 +30,7 @@ function love.load()
     enemy.shape = love.physics.newRectangleShape(100, 100)
     enemy.body = love.physics.newBody(world, screenWidth - 150, 50, 'dynamic')
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape, 1)
+    enemy.fixture:setCategory(3)
     enemy.img = love.graphics.newImage("assets/enemy-walking.png")
     enemy.animation = newAnimation(enemy.img, 100, 100, 1)
 
@@ -44,8 +46,14 @@ function beginContact(a, b, coll)
     lovebird.print(a, b, coll)
     aCat = a:getCategory()
     bCat = b:getCategory()
-    if (aCat == 2 or bCat == 2) and (aCat == 1 or bCat == 1) then
-        player.allowedJump = true
+    if aCat == 2 or bCat == 2 then
+        if aCat == 1 or bCat == 1 then
+            player.allowedJump = true
+            
+        end
+        if aCat == 1 or bCat == 1 then
+            player.isAlive = false
+        end
     end
 end
  
