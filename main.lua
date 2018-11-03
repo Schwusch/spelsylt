@@ -1,9 +1,12 @@
 lovebird = require "lovebird"
-local imageFile
-local frames = {}
-
-local activeFrame
-local currentFrame = 1
+lurker = require("lurker")
+anim8 = require 'anim8'
+frames = {}
+player = {}
+enemy = {}
+entities = {}
+ground = {}
+currentFrame = 1
 function love.load()
     local screenWidth = love.graphics.getWidth()
     local screenHeight = love.graphics.getHeight()
@@ -12,11 +15,9 @@ function love.load()
 
     world = love.physics.newWorld( 0, 500, true )
     world:setCallbacks(beginContact, endContact, preSolve, postSolve)
-    ground = {}
+
     createGround(ground)
     
-
-    player = {}
     player.allowedJump = false
     player.isAlive = true
     player.shape = love.physics.newRectangleShape(100, 100)
@@ -24,28 +25,59 @@ function love.load()
     player.fixture = love.physics.newFixture(player.body, player.shape, 1)
     player.fixture:setCategory(2)
     player.img = love.graphics.newImage("assets/idle.png")
-    player.animation = newAnimation(player.img, 100, 100, 1)
+    local pg = anim8.newGrid(100,100, player.img:getWidth(), player.img:getHeight())
+    player.animation = anim8.newAnimation(pg('1-4', 1), 0.1)
 
-    enemy = {}
     enemy.shape = love.physics.newRectangleShape(100, 100)
     enemy.body = love.physics.newBody(world, screenWidth - 150, 50, 'dynamic')
     enemy.fixture = love.physics.newFixture(enemy.body, enemy.shape, 1)
     enemy.fixture:setCategory(3)
     enemy.img = love.graphics.newImage("assets/enemy-walking.png")
-    enemy.animation = newAnimation(enemy.img, 100, 100, 1)
+    local eg = anim8.newGrid(100,100, enemy.img:getWidth(), enemy.img:getHeight())
+    enemy.animation = anim8.newAnimation(eg('1-12', 1), 0.1)
 
-    entities = {
-        player, 
-        enemy
-    }
+    entities[1] = player
+    entities[2] = enemy
 
     love.graphics.setBackgroundColor(1,1,1,1)
 end
 
+local elapsedTime = 0
+function love.update(dt)
+    lovebird.update()
+    lurker.update()
+    world:update(dt)
+    if love.keyboard.isDown( "left" ) then 
+        local vx, vy = player.body:getLinearVelocity()
+        player.body:setLinearVelocity(-100, vy) 
+    end
+    if love.keyboard.isDown( "right" ) then 
+        local vx, vy = player.body:getLinearVelocity()
+        player.body:setLinearVelocity(100, vy) 
+    end
+    for k, v in pairs(entities) do
+        v.animation:update(dt)
+    end
+end
+
+function love.draw()
+    drawBackground(backroundImg)
+    drawGround(ground)
+    for k, v in pairs(entities) do
+        drawAnimation(v)
+    end
+end
+
+function love.keypressed(key)
+    if type(keyTable[key]) == "function" then
+        keyTable[key]()
+    end
+end
+
 function beginContact(a, b, coll)
-    lovebird.print(a, b, coll)
-    aCat = a:getCategory()
-    bCat = b:getCategory()
+    contacts = world:getContacts( )
+    local aCat = a:getCategory()
+    local bCat = b:getCategory()
     if aCat == 2 or bCat == 2 then
         if aCat == 1 or bCat == 1 then
             player.allowedJump = true
@@ -58,7 +90,13 @@ function beginContact(a, b, coll)
 end
  
 function endContact(a, b, coll)
- 
+    aCat = a:getCategory()
+    bCat = b:getCategory()
+    if aCat == 2 or bCat == 2 then
+        if aCat == 1 or bCat == 1 then
+            player.allowedJump = false 
+        end
+    end
 end
  
 function preSolve(a, b, coll)
@@ -78,7 +116,7 @@ function drawBackground(image)
 end
 
 function createGround(ground)
-    ground.img = love.graphics.newImage("assets/tiles/sand.png")
+    ground.img = love.graphics.newImage("assets/Tiles/sand.png")
     ground.shapes = {}
     ground.bodies = {}
     ground.fixtures = {}
@@ -93,79 +131,23 @@ end
 
 function drawGround(ground)
     for k,v in pairs(ground.bodies) do
-        x, y = v:getPosition()
+        local x, y = v:getPosition()
         love.graphics.draw(ground.img, x, y, 0, 1, 1, ground.img:getWidth() / 2, ground.img:getHeight() / 2)
-    end
-end
-
-function love.draw()
-    drawBackground(backroundImg)
-    drawGround(ground)
-    for k, v in pairs(entities) do
-        drawAnimation(v)
     end
 end
 
 keyTable = {
     ["escape"] = function() love.event.push("quit") end,
     ["space"] = function() 
-        vx, vy = player.body:getLinearVelocity()
-        if vy < 0.1 and vy > -0.1 and player.allowedJump then
+        local vx, vy = player.body:getLinearVelocity()
+        if player.allowedJump then
             player.body:setLinearVelocity(vx, -300) 
         end
     end,
-
 }
 
-function love.keypressed(key)
-    if type(keyTable[key]) == "function" then
-        keyTable[key]()
-    end
-end
-
-local elapsedTime = 0
-function love.update(dt)
-    lovebird.update()
-    world:update(dt)
-    if love.keyboard.isDown( "left" ) then 
-        vx, vy = player.body:getLinearVelocity()
-        player.body:setLinearVelocity(-100, vy) 
-    end
-    if love.keyboard.isDown( "right" ) then 
-        vx, vy = player.body:getLinearVelocity()
-        player.body:setLinearVelocity(100, vy) 
-    end
-    for k, v in pairs(entities) do
-        updateAnimation(v, dt)
-    end
-end
-
 function drawAnimation(entity)
-    x, y = entity.body:getPosition()
-    local spriteNum = math.floor(entity.animation.currentTime / entity.animation.duration * #entity.animation.quads) + 1
-    love.graphics.draw(entity.animation.spriteSheet, entity.animation.quads[spriteNum], x, y, 0, 1, 1, 50, 50)
-end
-
-function updateAnimation(entity, dt)
-    entity.animation.currentTime = entity.animation.currentTime + dt
-    if entity.animation.currentTime >= entity.animation.duration then
-        entity.animation.currentTime = entity.animation.currentTime - entity.animation.duration
-    end
-end
-
-function newAnimation(image, width, height, duration)
-    local animation = {}
-    animation.spriteSheet = image;
-    animation.quads = {};
- 
-    for y = 0, image:getHeight() - height, height do
-        for x = 0, image:getWidth() - width, width do
-            table.insert(animation.quads, love.graphics.newQuad(x, y, width, height, image:getDimensions()))
-        end
-    end
- 
-    animation.duration = duration or 1
-    animation.currentTime = 0
- 
-    return animation
+    local x, y = entity.body:getPosition()
+    local w, h = entity.animation:getDimensions()
+    entity.animation:draw(entity.img, x - w/2, y - h/2)
 end
