@@ -44,26 +44,11 @@ end
 
 local elapsedTime = 0
 function love.update(dt)
-    lovebird.update()
-    lurker.update()
-    world:update(dt)
-    if love.keyboard.isDown( "left" ) then 
-        if not player.animation.flippedH then
-            player.animation:flipH()
-        end
-        local vx, vy = player.body:getLinearVelocity()
-        player.body:setLinearVelocity(-100, vy) 
-    end
-    if love.keyboard.isDown( "right" ) then 
-        if player.animation.flippedH then
-            player.animation:flipH()
-        end
-        local vx, vy = player.body:getLinearVelocity()
-        player.body:setLinearVelocity(100, vy) 
-    end
-    for k, v in pairs(entities) do
-        v.animation:update(dt)
-    end
+    updateKeyboardInput()
+    lovebird.update() -- Debugging at 127.0.0.1:8000
+    lurker.update() -- Hotswapping files when saving
+    world:update(dt) -- Updating Box2D world
+    updateAnimations(dt)
 end
 
 function love.draw()
@@ -80,8 +65,30 @@ function love.keypressed(key)
     end
 end
 
+function updateKeyboardInput()
+    if love.keyboard.isDown( "left" ) then 
+        if not player.animation.flippedH then
+            player.animation:flipH()
+        end
+        local vx, vy = player.body:getLinearVelocity()
+        player.body:setLinearVelocity(-200, vy) 
+    end
+    if love.keyboard.isDown( "right" ) then 
+        if player.animation.flippedH then
+            player.animation:flipH()
+        end
+        local vx, vy = player.body:getLinearVelocity()
+        player.body:setLinearVelocity(200, vy) 
+    end
+end
+
+function updateAnimations(dt)
+    for k, v in pairs(entities) do
+        v.animation:update(dt)
+    end
+end
+
 function beginContact(a, b, coll)
-    contacts = world:getContacts( )
     local aCat = a:getCategory()
     local bCat = b:getCategory()
     if aCat == 2 or bCat == 2 then
@@ -131,6 +138,7 @@ function createGround(ground)
         ground.bodies[i+1] = love.physics.newBody(world, i * ground.img:getWidth() + ground.img:getWidth() / 2, love.graphics.getHeight() - ground.img:getHeight() + ground.img:getHeight() / 2, 'static')
         local fixt = love.physics.newFixture(ground.bodies[i+1], ground.shapes[i+1], 1)
         fixt:setCategory(1)
+        fixt:setFriction(1.0)
         ground.fixtures[i+1] = fixt
     end
 end
