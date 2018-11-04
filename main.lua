@@ -1,6 +1,7 @@
 lovebird = require "libs/lovebird"
-lurker = require("libs/lurker")
+lurker = require "libs/lurker"
 anim8 = require 'libs/anim8'
+Input = require 'libs/Input'
 frames = {}
 player = {}
 enemy = {}
@@ -40,6 +41,17 @@ function love.load()
     entities[2] = enemy
 
     love.graphics.setBackgroundColor(1,1,1,1)
+
+    input = Input()
+    input:bind('escape', function() love.event.push("quit") end)
+    input:bind('space', function()
+        local vx, vy = player.body:getLinearVelocity()
+        if player.allowedJump then
+            player.body:setLinearVelocity(vx, -300) 
+        end
+    end)
+    input:bind('left', 'left')
+    input:bind('right', 'right')
 end
 
 local elapsedTime = 0
@@ -59,21 +71,15 @@ function love.draw()
     end
 end
 
-function love.keypressed(key)
-    if type(keyTable[key]) == "function" then
-        keyTable[key]()
-    end
-end
-
 function updateKeyboardInput()
-    if love.keyboard.isDown( "left" ) then 
+    if input:down( "left") then 
         if not player.animation.flippedH then
             player.animation:flipH()
         end
         local vx, vy = player.body:getLinearVelocity()
         player.body:setLinearVelocity(-200, vy) 
     end
-    if love.keyboard.isDown( "right" ) then 
+    if input:down("right") then 
         if player.animation.flippedH then
             player.animation:flipH()
         end
@@ -149,16 +155,6 @@ function drawGround(ground)
         love.graphics.draw(ground.img, x, y, 0, 1, 1, ground.img:getWidth() / 2, ground.img:getHeight() / 2)
     end
 end
-
-keyTable = {
-    ["escape"] = function() love.event.push("quit") end,
-    ["space"] = function() 
-        local vx, vy = player.body:getLinearVelocity()
-        if player.allowedJump then
-            player.body:setLinearVelocity(vx, -300) 
-        end
-    end,
-}
 
 function drawAnimation(entity)
     local x, y = entity.body:getPosition()
