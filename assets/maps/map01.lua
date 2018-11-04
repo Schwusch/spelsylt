@@ -8,8 +8,8 @@ return {
   height = 29,
   tilewidth = 21,
   tileheight = 21,
-  nextlayerid = 10,
-  nextobjectid = 2,
+  nextlayerid = 11,
+  nextobjectid = 5,
   properties = {},
   tilesets = {
     {
@@ -37,132 +37,67 @@ return {
       properties = {},
       terrains = {},
       tilecount = 480,
-      tiles = {}
-    },
-    {
-      name = "enemy-walking",
-      firstgid = 481,
-      filename = "../Enemies/enemy-walking.tsx",
-      tilewidth = 100,
-      tileheight = 100,
-      spacing = 0,
-      margin = 0,
-      columns = 12,
-      image = "../enemy-walking.png",
-      imagewidth = 1200,
-      imageheight = 100,
-      transparentcolor = "#5e81a2",
-      tileoffset = {
-        x = 0,
-        y = 0
-      },
-      grid = {
-        orientation = "orthogonal",
-        width = 100,
-        height = 100
-      },
-      properties = {},
-      terrains = {},
-      tilecount = 12,
       tiles = {
         {
-          id = 0,
+          id = 19,
           animation = {
             {
-              tileid = 0,
+              tileid = 19,
+              duration = 500
+            },
+            {
+              tileid = 20,
+              duration = 500
+            }
+          }
+        },
+        {
+          id = 373,
+          animation = {
+            {
+              tileid = 373,
               duration = 100
             },
             {
-              tileid = 1,
+              tileid = 374,
               duration = 100
             },
             {
-              tileid = 2,
-              duration = 100
-            },
-            {
-              tileid = 3,
-              duration = 100
-            },
-            {
-              tileid = 4,
-              duration = 100
-            },
-            {
-              tileid = 5,
-              duration = 100
-            },
-            {
-              tileid = 6,
-              duration = 100
-            },
-            {
-              tileid = 7,
-              duration = 100
-            },
-            {
-              tileid = 8,
-              duration = 100
-            },
-            {
-              tileid = 9,
-              duration = 100
-            },
-            {
-              tileid = 10,
-              duration = 100
-            },
-            {
-              tileid = 11,
+              tileid = 375,
               duration = 100
             }
           }
-        }
-      }
-    },
-    {
-      name = "idle",
-      firstgid = 493,
-      filename = "../Player/idle.tsx",
-      tilewidth = 100,
-      tileheight = 100,
-      spacing = 0,
-      margin = 0,
-      columns = 4,
-      image = "../idle.png",
-      imagewidth = 400,
-      imageheight = 100,
-      transparentcolor = "#5e81a2",
-      tileoffset = {
-        x = 0,
-        y = 0
-      },
-      grid = {
-        orientation = "orthogonal",
-        width = 100,
-        height = 100
-      },
-      properties = {},
-      terrains = {},
-      tilecount = 4,
-      tiles = {
+        },
         {
-          id = 0,
+          id = 403,
           animation = {
             {
-              tileid = 0,
+              tileid = 403,
               duration = 100
             },
             {
-              tileid = 1,
+              tileid = 404,
               duration = 100
             },
             {
-              tileid = 2,
+              tileid = 405,
+              duration = 100
+            }
+          }
+        },
+        {
+          id = 433,
+          animation = {
+            {
+              tileid = 433,
               duration = 100
             },
             {
-              tileid = 3,
+              tileid = 434,
+              duration = 100
+            },
+            {
+              tileid = 435,
               duration = 100
             }
           }
@@ -275,17 +210,49 @@ return {
       properties = {},
       objects = {
         {
-          id = 1,
-          name = "StartingPoint",
+          id = 3,
+          name = "Ground",
           type = "",
           shape = "rectangle",
-          x = 63,
-          y = 425,
-          width = 100,
-          height = 100,
+          x = 0,
+          y = 547,
+          width = 805,
+          height = 39,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["collidable"] = true
+          }
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      id = 10,
+      name = "Player",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 4,
+          name = "Player",
+          type = "",
+          shape = "rectangle",
+          x = 400.5,
+          y = 333.5,
+          width = 21,
+          height = 21,
+          rotation = 0,
+          gid = 20,
+          visible = true,
+          properties = {
+            ["collidable"] = true,
+            ["dynamic"] = true
+          }
         }
       }
     }
