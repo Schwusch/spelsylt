@@ -2,6 +2,7 @@ lovebird = require "libs/lovebird"
 lurker = require "libs/lurker"
 anim8 = require 'libs/anim8'
 Input = require 'libs/Input'
+sti = require 'libs/sti/sti'
 frames = {}
 player = {}
 enemy = {}
@@ -13,7 +14,7 @@ function love.load()
     local screenHeight = love.graphics.getHeight()
 
     backroundImg = love.graphics.newImage("assets/bg.png")
-
+    map = sti('assets/maps/map01.lua')
     world = love.physics.newWorld( 0, 500, true )
     world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 
@@ -60,6 +61,7 @@ function love.update(dt)
     lovebird.update() -- Debugging at 127.0.0.1:8000
     lurker.update() -- Hotswapping files when saving
     world:update(dt) -- Updating Box2D world
+    map:update(dt)
     updateAnimations(dt)
 end
 
@@ -69,6 +71,7 @@ function love.draw()
     for k, v in pairs(entities) do
         drawAnimation(v)
     end
+    map:draw()
 end
 
 function updateKeyboardInput()
