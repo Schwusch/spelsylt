@@ -2,6 +2,9 @@
 <tileset version="1.2" tiledversion="1.2.0" name="spritesheet" tilewidth="21" tileheight="21" spacing="2" tilecount="480" columns="30">
  <image source="../spritesheet.png" trans="5e81a2" width="694" height="372"/>
  <tile id="19">
+  <properties>
+   <property name="name" value="Player"/>
+  </properties>
   <animation>
    <frame tileid="19" duration="500"/>
    <frame tileid="20" duration="500"/>
