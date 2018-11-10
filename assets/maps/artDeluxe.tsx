@@ -3,11 +3,36 @@
  <image source="../spritesheet.png" trans="5e81a2" width="694" height="372"/>
  <tile id="19">
   <properties>
-   <property name="name" value="Player"/>
+   <property name="name" value="still"/>
+  </properties>
+ </tile>
+ <tile id="20">
+  <properties>
+   <property name="name" value="move"/>
+  </properties>
+ </tile>
+ <tile id="21">
+  <properties>
+   <property name="name" value="brake"/>
+  </properties>
+ </tile>
+ <tile id="22">
+  <properties>
+   <property name="name" value="duck"/>
+  </properties>
+ </tile>
+ <tile id="23">
+  <properties>
+   <property name="name" value="fall"/>
+  </properties>
+ </tile>
+ <tile id="28">
+  <properties>
+   <property name="name" value="walk"/>
   </properties>
   <animation>
-   <frame tileid="19" duration="500"/>
-   <frame tileid="20" duration="500"/>
+   <frame tileid="28" duration="100"/>
+   <frame tileid="29" duration="100"/>
   </animation>
  </tile>
  <tile id="373">

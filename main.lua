@@ -34,18 +34,30 @@ function love.load()
     end
 
     for k, tile in pairs(map.tiles) do
-        if tile.properties and tile.properties.name == "Player" then 
-            player.tile = tile
+        if tile.properties and tile.properties.name == "still" then 
+            still = tile
+        elseif tile.properties and tile.properties.name == "walk" then 
+            walk = tile
+        elseif tile.properties and tile.properties.name == "brake" then 
+            brake = tile
+        elseif tile.properties and tile.properties.name == "fall" then 
+            fall = tile
         end
     end
     
+    player.tile = still
     map:removeLayer('Player')
     playerLayer = map:addCustomLayer("Player", 3)
 
     playerLayer.draw = function(self) 
-        local tileid = player.tile.animation[player.tile.frame].tileid
-        local firstgid = map.tilesets[player.tile.tileset].firstgid
-        local t = map.tiles[tonumber(tileid) + firstgid]
+        local t
+        if player.tile.animation then 
+            local tileid = player.tile.animation[player.tile.frame].tileid
+            local firstgid = map.tilesets[player.tile.tileset].firstgid
+            t = map.tiles[tonumber(tileid) + firstgid]
+        else 
+            t = player.tile
+        end
         local x, y = player.body:getWorldCenter()
         love.graphics.draw(
             spritesheet,
@@ -95,12 +107,20 @@ function love.draw()
     map:draw(tx, ty, scale, scale)
 
     -- Draw Collision Map (useful for debugging)
-	love.graphics.setColor(255, 0, 0)
-	map:box2d_draw(tx, ty, scale, scale)
+	-- love.graphics.setColor(255, 0, 0)
+	-- map:box2d_draw(tx, ty, scale, scale)
 end
 
 function updatePlayer() 
     player.object.x, player.object.y = player.body:getPosition()
+    local vx, vy = player.body:getLinearVelocity()
+    if (vx > 0.1 or vx < -0.1) and vy < 0.1 and vy > -0.1 and (input:down( "left") or input:down( "right")) then 
+        player.tile = walk
+    elseif (vx > 0.1 or vx < -0.1) and vy < 0.1 and vy > -0.1 then
+        player.tile = brake
+    else 
+        player.tile = still
+    end
 end
 
 function updateKeyboardInput()
@@ -114,7 +134,7 @@ function updateKeyboardInput()
     end
 end
 
-function beginContact(a, b, coll) end
+function beginContact(Drawa, b, coll) end
  
 function endContact(a, b, coll) end
  

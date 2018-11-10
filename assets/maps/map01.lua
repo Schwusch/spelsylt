@@ -41,16 +41,46 @@ return {
         {
           id = 19,
           properties = {
-            ["name"] = "Player"
+            ["name"] = "still"
+          }
+        },
+        {
+          id = 20,
+          properties = {
+            ["name"] = "move"
+          }
+        },
+        {
+          id = 21,
+          properties = {
+            ["name"] = "brake"
+          }
+        },
+        {
+          id = 22,
+          properties = {
+            ["name"] = "duck"
+          }
+        },
+        {
+          id = 23,
+          properties = {
+            ["name"] = "fall"
+          }
+        },
+        {
+          id = 28,
+          properties = {
+            ["name"] = "walk"
           },
           animation = {
             {
-              tileid = 19,
-              duration = 500
+              tileid = 28,
+              duration = 100
             },
             {
-              tileid = 20,
-              duration = 500
+              tileid = 29,
+              duration = 100
             }
           }
         },
