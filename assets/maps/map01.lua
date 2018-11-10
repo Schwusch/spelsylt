@@ -69,6 +69,12 @@ return {
           }
         },
         {
+          id = 26,
+          properties = {
+            ["name"] = "jump"
+          }
+        },
+        {
           id = 28,
           properties = {
             ["name"] = "walk"

@@ -26,6 +26,11 @@
    <property name="name" value="fall"/>
   </properties>
  </tile>
+ <tile id="26">
+  <properties>
+   <property name="name" value="jump"/>
+  </properties>
+ </tile>
  <tile id="28">
   <properties>
    <property name="name" value="walk"/>

@@ -42,6 +42,8 @@ function love.load()
             brake = tile
         elseif tile.properties and tile.properties.name == "fall" then 
             fall = tile
+        elseif tile.properties and tile.properties.name == "jump" then 
+            jump = tile
         end
     end
     
@@ -118,6 +120,10 @@ function updatePlayer()
         player.tile = walk
     elseif (vx > 0.1 or vx < -0.1) and vy < 0.1 and vy > -0.1 then
         player.tile = brake
+    elseif vy > 0.1 then
+        player.tile = jump
+    elseif vy < -0.1 then
+        player.tile = fall
     else 
         player.tile = still
     end
