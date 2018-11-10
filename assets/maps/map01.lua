@@ -9,7 +9,7 @@ return {
   tilewidth = 21,
   tileheight = 21,
   nextlayerid = 11,
-  nextobjectid = 5,
+  nextobjectid = 15,
   properties = {},
   tilesets = {
     {
@@ -226,6 +226,51 @@ return {
           properties = {
             ["collidable"] = true
           }
+        },
+        {
+          id = 5,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 805,
+          y = 0,
+          width = 18,
+          height = 547,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["collidable"] = true
+          }
+        },
+        {
+          id = 7,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = -27,
+          y = 1,
+          width = 26,
+          height = 550,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["collidable"] = true
+          }
+        },
+        {
+          id = 8,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1,
+          y = -25,
+          width = 803,
+          height = 24,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["collidable"] = true
+          }
         }
       }
     },
@@ -245,8 +290,8 @@ return {
           name = "Player",
           type = "",
           shape = "rectangle",
-          x = 400.5,
-          y = 333.5,
+          x = 250.167,
+          y = 525.167,
           width = 21,
           height = 21,
           rotation = 0,

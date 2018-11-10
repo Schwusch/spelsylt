@@ -82,25 +82,25 @@ end
 
 function love.draw()
     -- Scale world
-    local scale = 2
-    local screen_width = love.graphics.getWidth() / scale
-    local screen_height = love.graphics.getHeight() / scale
-    local x, y = player.body:getPosition()
-    local tx = - math.floor(x + screen_width / 2)
-    local ty = - math.floor(y + screen_height  / 2)
+    local scale = 2.5
+    local x, y = player.body:getWorldCenter()
 
+    local s_width = love.graphics.getWidth() / scale
+    local s_height = love.graphics.getHeight() / scale
+    
+    local tx = -(x - s_width / 2)
+    local ty = -(y - s_height / 2)
+    
     love.graphics.setColor(255, 255, 255)
     map:draw(tx, ty, scale, scale)
-    
+
     -- Draw Collision Map (useful for debugging)
-	-- love.graphics.setColor(255, 0, 0)
-	-- map:box2d_draw()
+	love.graphics.setColor(255, 0, 0)
+	map:box2d_draw(tx, ty, scale, scale)
 end
 
 function updatePlayer() 
-    x, y = player.body:getPosition()
-    player.object.x = x
-    player.object.y = y
+    player.object.x, player.object.y = player.body:getPosition()
 end
 
 function updateKeyboardInput()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="39" height="29" tilewidth="21" tileheight="21" infinite="0" nextlayerid="11" nextobjectid="5">
+<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="39" height="29" tilewidth="21" tileheight="21" infinite="0" nextlayerid="11" nextobjectid="15">
  <tileset firstgid="1" source="artDeluxe.tsx"/>
  <layer id="8" name="Background" width="39" height="29">
   <data encoding="csv">
@@ -73,9 +73,24 @@
     <property name="collidable" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="5" x="805" y="0" width="18" height="547">
+   <properties>
+    <property name="collidable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="7" x="-27" y="1" width="26" height="550">
+   <properties>
+    <property name="collidable" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="8" x="1" y="-25" width="803" height="24">
+   <properties>
+    <property name="collidable" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="10" name="Player">
-  <object id="4" name="Player" gid="20" x="400.5" y="333.5" width="21" height="21">
+  <object id="4" name="Player" gid="20" x="250.167" y="525.167" width="21" height="21">
    <properties>
     <property name="collidable" type="bool" value="true"/>
     <property name="dynamic" type="bool" value="true"/>
