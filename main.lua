@@ -67,8 +67,8 @@ function love.load()
             x,
             y,
             0, -- rotation
-            1, -- scale X
-            1, -- scale Y
+            player.tile.sx, -- scale X
+            player.tile.sy, -- scale Y
             player.object.width / 2, -- offset X
             player.object.height / 2 -- offset Y
         )
@@ -126,6 +126,11 @@ function updatePlayer()
         player.tile = fall
     else 
         player.tile = still
+    end
+    if vx < -0.1 then 
+        player.tile.sx = -1
+    else
+        player.tile.sx = 1
     end
 end
 
