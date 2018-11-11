@@ -161,7 +161,7 @@ function updateKeyboardInput()
 end
 
 function beginContact(a, b, coll)
-    local coin = getCoin(a, b)
+    local coin = lume.match({a, b}, function(c) return get(c:getUserData(), {"properties", "type"}) == "coin" end)
     if coin then 
         print("COIN!")
         v, k = lume.match(map.box2d_collision, function(x) return x.fixture == coin end)
@@ -175,14 +175,6 @@ function endContact(a, b, coll) end
 function preSolve(a, b, coll) end
  
 function postSolve(a, b, coll, normalimpulse, tangentimpulse) end
-
-function getCoin(a, b)
-    local path = {"properties", "type"}
-    if get(a:getUserData(), path) == "coin" then return a
-    elseif get(b:getUserData(), path) == "coin" then return b
-    else return false
-    end
-end
 
 function get(table, keys) 
     local tmp = table[keys[1]]
