@@ -84,13 +84,16 @@ function love.load()
             player.object.height / 2 -- offset Y
         )
     end
-    
-    input = Input()
-    input:bind('escape', function() love.event.push("quit") end)
-    input:bind('space', function()
+
+    local function jump()
         local vx, vy = player.body:getLinearVelocity()
         player.body:setLinearVelocity(vx, -300) 
-    end)
+    end
+
+    input = Input()
+    input:bind('escape', function() love.event.push("quit") end)
+    input:bind('space', jump)
+    input:bind('up', jump)
     input:bind('left', 'left')
     input:bind('right', 'right')
 end
