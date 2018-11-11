@@ -8,8 +8,8 @@ return {
   height = 29,
   tilewidth = 21,
   tileheight = 21,
-  nextlayerid = 11,
-  nextobjectid = 15,
+  nextlayerid = 12,
+  nextobjectid = 23,
   properties = {},
   tilesets = {
     {
@@ -88,6 +88,12 @@ return {
               tileid = 29,
               duration = 100
             }
+          }
+        },
+        {
+          id = 115,
+          properties = {
+            ["name"] = "coin"
           }
         },
         {
@@ -306,6 +312,78 @@ return {
           visible = true,
           properties = {
             ["collidable"] = true
+          }
+        },
+        {
+          id = 15,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 412.333,
+          y = 533.333,
+          width = 21,
+          height = 21,
+          rotation = 0,
+          gid = 116,
+          visible = true,
+          properties = {
+            ["collidable"] = true,
+            ["sensor"] = true,
+            ["type"] = "coin"
+          }
+        },
+        {
+          id = 16,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 448.667,
+          y = 511,
+          width = 21,
+          height = 21,
+          rotation = 0,
+          gid = 116,
+          visible = true,
+          properties = {
+            ["collidable"] = true,
+            ["sensor"] = true,
+            ["type"] = "coin"
+          }
+        },
+        {
+          id = 17,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 486.667,
+          y = 486.333,
+          width = 21,
+          height = 21,
+          rotation = 0,
+          gid = 116,
+          visible = true,
+          properties = {
+            ["collidable"] = true,
+            ["sensor"] = true,
+            ["type"] = "coin"
+          }
+        },
+        {
+          id = 18,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 529.333,
+          y = 475.333,
+          width = 21,
+          height = 21,
+          rotation = 0,
+          gid = 116,
+          visible = true,
+          properties = {
+            ["collidable"] = true,
+            ["sensor"] = true,
+            ["type"] = "coin"
           }
         }
       }

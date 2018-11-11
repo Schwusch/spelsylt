@@ -1,8 +1,11 @@
 lovebird = require "libs/lovebird"
 lurker = require "libs/lurker"
+lume = require "libs/lume"
 Input = require 'libs/Input'
 sti = require 'libs/STI'
+inspect = require 'libs/inspect'
 frames = {}
+destroyQueue = {}
 currentFrame = 1
 
 function love.load()
@@ -14,7 +17,8 @@ function love.load()
 
     -- Load a map exported to Lua from Tiled
     map = sti('assets/maps/map01.lua', { "box2d" })
-    spritesheet = map.tilesets[1].image
+    
+    spritesheet = get(map, {"tilesets", 1, "image"})
 
     -- Prepare physics world with horizontal and vertical gravity
     world = love.physics.newWorld( 0, 500 )
@@ -34,15 +38,16 @@ function love.load()
     end
 
     for k, tile in pairs(map.tiles) do
-        if tile.properties and tile.properties.name == "still" then 
+        local name = get(tile, {"properties", "name"})
+        if name == "still" then 
             still = tile
-        elseif tile.properties and tile.properties.name == "walk" then 
+        elseif name == "walk" then 
             walk = tile
-        elseif tile.properties and tile.properties.name == "brake" then 
+        elseif name == "brake" then 
             brake = tile
-        elseif tile.properties and tile.properties.name == "fall" then 
+        elseif name == "fall" then 
             fall = tile
-        elseif tile.properties and tile.properties.name == "jump" then 
+        elseif name == "jump" then 
             jump = tile
         end
     end
@@ -66,7 +71,7 @@ function love.load()
             t.quad,
             x,
             y,
-            0, -- rotation
+            player.tile.r, -- rotation
             player.tile.sx, -- scale X
             player.tile.sy, -- scale Y
             player.object.width / 2, -- offset X
@@ -95,6 +100,8 @@ function love.update(dt)
 end
 
 function love.draw()
+    lume.each(destroyQueue, "destroy")
+    lume.clear(destroyQueue)
     -- Scale world
     local scale = 2.5
     local x, y = player.body:getWorldCenter()
@@ -109,8 +116,8 @@ function love.draw()
     map:draw(tx, ty, scale, scale)
 
     -- Draw Collision Map (useful for debugging)
-	-- love.graphics.setColor(255, 0, 0)
-	-- map:box2d_draw(tx, ty, scale, scale)
+	 love.graphics.setColor(255, 0, 0)
+	 map:box2d_draw(tx, ty, scale, scale)
 end
 
 function updatePlayer() 
@@ -127,6 +134,7 @@ function updatePlayer()
     else 
         player.tile = still
     end
+    -- flip sprite depending on 
     if vx < -0.1 then 
         player.tile.sx = -1
     else
@@ -145,10 +153,36 @@ function updateKeyboardInput()
     end
 end
 
-function beginContact(Drawa, b, coll) end
+function beginContact(a, b, coll)
+    local coin = getCoin(a, b)
+    if coin then 
+        print("COIN!")
+        v, k = lume.match(map.box2d_collision, function(x) return x.fixture == coin end)
+        lume.remove(map.box2d_collision, v)
+        lume.push(destroyQueue, coin:getBody()) 
+    end
+end
  
 function endContact(a, b, coll) end
  
 function preSolve(a, b, coll) end
  
 function postSolve(a, b, coll, normalimpulse, tangentimpulse) end
+
+function getCoin(a, b)
+    local path = {"properties", "type"}
+    if get(a:getUserData(), path) == "coin" then return a
+    elseif get(b:getUserData(), path) == "coin" then return b
+    else return false
+    end
+end
+
+function get(table, keys) 
+    local tmp = table[keys[1]]
+    for k, key in ipairs(keys) do
+        if k > 1 and tmp then
+            tmp = tmp[keys[k]]
+        end
+    end
+    return tmp
+end

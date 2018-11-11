@@ -40,6 +40,11 @@
    <frame tileid="29" duration="100"/>
   </animation>
  </tile>
+ <tile id="115">
+  <properties>
+   <property name="name" value="coin"/>
+  </properties>
+ </tile>
  <tile id="373">
   <animation>
    <frame tileid="373" duration="100"/>
