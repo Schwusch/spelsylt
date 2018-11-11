@@ -17,7 +17,6 @@ function love.load()
 
     -- Load a map exported to Lua from Tiled
     map = sti('assets/maps/map01.lua', { "box2d" })
-    
     spritesheet = get(map, {"tilesets", 1, "image"})
 
     -- Prepare physics world with horizontal and vertical gravity
@@ -26,8 +25,6 @@ function love.load()
 
     -- Prepare collision objects
     map:box2d_init(world)
-
-    map:removeLayer('GameObjects')
 
     for k, object in pairs(map.box2d_collision) do
         if type(k) == 'number' and object.object.name == "Player" then
@@ -49,14 +46,23 @@ function love.load()
             fall = tile
         elseif name == "jump" then 
             jump = tile
+        elseif name == "coin" then
+            coin = tile
         end
+    end
+
+    map.layers.GameObjects.draw = function(self)
+        lume.each(map.box2d_collision, function(coll)
+            if get(coll, {"object", "properties", "type"}) == "coin" then
+                local points = {coll.body:getWorldPoints(coll.shape:getPoints())}
+                love.graphics.draw(spritesheet, coin.quad, points[7], points[8])
+            end
+        end)
     end
     
     player.tile = still
-    map:removeLayer('Player')
-    playerLayer = map:addCustomLayer("Player", 3)
 
-    playerLayer.draw = function(self) 
+    map.layers.Player.draw = function(self) 
         local t
         if player.tile.animation then 
             local tileid = player.tile.animation[player.tile.frame].tileid
@@ -91,6 +97,9 @@ end
 
 local elapsedTime = 0
 function love.update(dt)
+    lume.each(destroyQueue, "destroy")
+    lume.clear(destroyQueue)
+
     updateKeyboardInput()
     lovebird.update() -- Debugging at 127.0.0.1:8000
     lurker.update() -- Hotswapping files when saving
@@ -100,8 +109,6 @@ function love.update(dt)
 end
 
 function love.draw()
-    lume.each(destroyQueue, "destroy")
-    lume.clear(destroyQueue)
     -- Scale world
     local scale = 2.5
     local x, y = player.body:getWorldCenter()
@@ -159,7 +166,7 @@ function beginContact(a, b, coll)
         print("COIN!")
         v, k = lume.match(map.box2d_collision, function(x) return x.fixture == coin end)
         lume.remove(map.box2d_collision, v)
-        lume.push(destroyQueue, coin:getBody()) 
+        lume.push(destroyQueue, coin) 
     end
 end
  
